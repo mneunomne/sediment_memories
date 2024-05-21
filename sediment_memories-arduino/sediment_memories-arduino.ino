@@ -14,18 +14,26 @@
 #define microY2 3
 #define microY3 4
 
+#include <GCodeParser.h>
+
+GCodeParser GCode = GCodeParser();
+
 int minDelay = 2;
 int maxDelay = 200;
 
 char c;
+
+char buffer[14];
 
 // current position
 
 long curX = 0L;
 long curY = 0L;
 
+long steps_per_pixel = 50; 
+
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   
   pinMode(STEP_PIN_X,OUTPUT);
   pinMode(DIR_PIN_X,OUTPUT);
@@ -38,26 +46,43 @@ void setup() {
 }
 void loop() {
   listenToPort();
-}
+}\
 
-void listenToPort () {
-  String chars = "";
-  if (Serial.available()) {
-    char c = Serial.read();
-    while (c != '\n') {
-      chars += c;
-      c = Serial.read();
+void listenToPort() {
+  while (Serial.available() > 0)
+  {
+    if (GCode.AddCharToLine(Serial.read()))
+    {
+      GCode.ParseLine();
+
+      if (GCode.HasWord('G'))
+      {
+        // get value of X and Y 
+        if (GCode.HasWord('X'))
+        {
+          long posX = GCode.GetWordValue('X');
+          long posY = GCode.GetWordValue('Y');
+          move(posX, posY);
+          // repond to the sender the current position
+          Serial.println("end");
+        }
+      }
     }
   }
 }
 
+
 void start () {
+  Serial.println("r");
+  delay(100);
+
   digitalWrite(ENA_PIN,LOW); // enable motor HIGH -> DISABLE
   digitalWrite(ENA_PIN,LOW); // enable motor HIGH -> DISABLE
   moveX(1000, 1, 500);
   moveY(1000, 1, 500);
   moveX(1000, -1, 500);
   moveY(1000, -1, 500);
+
   //long posX = -50000L;
   //long posY = -50000L;
   //moveTo(posX, posY);
@@ -84,18 +109,20 @@ float customCubicInterpolate(float t) {
     }
 }
 
-void moveTo(long targetX, long targetY) {
-  long diffX = targetX - curX;
-  long diffY = targetY - curY;
-  Serial.println("diff");
+void move(long diffX, long diffY) {
+  // Serial.println("diff");
+  // Serial.println(diffX);
+  // Serial.println(diffY);
+  Serial.println(diffX);
+  Serial.println(diffY);
 
   // Determine the direction for each axis
   int dirX = (diffX > 0) ? 1 : -1;
   int dirY = (diffY > 0) ? 1 : -1;
 
   // Calculate the total steps for each axis
-  int totalStepsX = abs(diffX);
-  int totalStepsY = abs(diffY);
+  int totalStepsX = abs(diffX * steps_per_pixel);
+  int totalStepsY = abs(diffY * steps_per_pixel);
 
   // Determine the larger number of steps
   int maxSteps = max(totalStepsX, totalStepsY);

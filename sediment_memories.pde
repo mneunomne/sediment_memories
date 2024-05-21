@@ -16,20 +16,37 @@ boolean enableSendLines = false;
 
 boolean noMachine = false;
 
-static final int IDLE         = 0;
-static final int DRAW_MODE    = 1; 
-static final int SEND_LINES   = 2;
+static final int IDLE               = 0;
+static final int DRAW_MODE          = 1; 
+static final int SEND_LINES         = 2;
 String [] states = {
   "IDLE",
   "DRAW_MODE",
   "SEND_LINES"
 };
-
 int state = 0; 
+
+
+static final int MACHINE_IDLE       = 0;
+static final int MOVING_TO          = 1; 
+static final int DRAWING            = 2;
+static final int MOVING_TO_ENDED    = 3;
+static final int DRAWING_TO_ENDED   = 4;
+String [] machine_states = {
+  "IDLE",
+  "MOVING_TO",
+  "DRAWING",
+  "MOVING_TO_ENDED",
+  "DRAWING_TO_ENDED"
+};
+int machine_state = 0;
 
 PGraphics pg;
 
 int canvas_margin = 100;
+
+int lineIndex = 0;
+int segmentIndex = 0;
 
 void setup() {
   size(800, 800);
@@ -47,10 +64,9 @@ void setup() {
 void draw() {
 
   background(0);
-
-  machineController.display();
-
   data.display();
+  machineController.update();
+  machineController.display();
 }
 
 // on mouse press, create a new line
@@ -117,7 +133,33 @@ void keyPressed() {
 }
 
 void startSendLines() {
+  lineIndex = 0;
+  segmentIndex = 0;
+  goToLine();
+}
 
+void goToLine () {
+  // move to the first position of first line
+  int x = int(data.lines.get(lineIndex).get(segmentIndex).x);
+  int y = int(data.lines.get(lineIndex).get(segmentIndex).y);
+  machineController.moveTo(x, y); // move to the first point of the first line
+}
+
+void sendDrawLine() {
+  if (segmentIndex < data.lines.get(lineIndex).size()-1) {
+    segmentIndex++;
+    int x = int(data.lines.get(lineIndex).get(segmentIndex).x);
+    int y = int(data.lines.get(lineIndex).get(segmentIndex).y);
+    machineController.sendLine(x, y);
+  } else {
+    lineIndex++;
+    segmentIndex = 0;
+    if (lineIndex >= data.lines.size()) {
+      machine_state = MACHINE_IDLE;
+      return; 
+    }
+    goToLine();
+  }
 }
  
 
