@@ -14,10 +14,10 @@ MachineController machineController;
 boolean enableDraw = false; 
 boolean enableSendLines = false;
 
-boolean noMachine = false;
+boolean noMachine = true;
 
 static final int IDLE               = 0;
-static final int DRAW_MODE          = 1; 
+static final int DRAW_MODE          = 1;
 static final int SEND_LINES         = 2;
 String [] states = {
   "IDLE",
@@ -26,9 +26,8 @@ String [] states = {
 };
 int state = 0; 
 
-
 static final int MACHINE_IDLE       = 0;
-static final int MOVING_TO          = 1; 
+static final int MOVING_TO          = 1;
 static final int DRAWING            = 2;
 static final int MOVING_TO_ENDED    = 3;
 static final int DRAWING_TO_ENDED   = 4;
@@ -47,6 +46,8 @@ int canvas_margin = 100;
 
 int lineIndex = 0;
 int segmentIndex = 0;
+
+int default_microdelay = 1000;
 
 void setup() {
   size(800, 800);
@@ -154,7 +155,7 @@ void sendDrawLine() {
   } else {
     lineIndex++;
     segmentIndex = 0;
-    if (lineIndex >= data.lines.size()) {
+    if (lineIndex >= data.lines.size() - 1) {
       machine_state = MACHINE_IDLE;
       return; 
     }

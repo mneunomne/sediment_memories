@@ -112,7 +112,7 @@ public class MachineController {
     int diff_x = int(x - currentPos.x);
     int diff_y = int(y - currentPos.y);
     // send movement data
-    sendMovement(diff_x, diff_y, 1);
+    sendMovement(diff_x, diff_y, 1, default_microdelay);
   }
 
   void sendLine(int x, int y) {
@@ -121,14 +121,14 @@ public class MachineController {
     int diff_x = int(x - currentPos.x);
     int diff_y = int(y - currentPos.y);
     // send movement data
-    sendMovement(diff_x, diff_y, 2);
+    sendMovement(diff_x, diff_y, 2, default_microdelay);
   }
 
-  void sendMovement (int x, int y, int type) {
+  void sendMovement (int x, int y, int type, int microdelay) {
     if (noMachine) return;
     // encode movement
     // String message = "[" + x + "," + y + "]";
-    String message = "G" + type +  " X" + x + " Y" + y + '\n';
+    String message = "G" + type +  " X" + x + " Y" + y + " F" + microdelay + '\n';
     port.write(message);
     println("[MachineController] Sent: " + message);
   }
