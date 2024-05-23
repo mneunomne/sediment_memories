@@ -98,17 +98,11 @@ void mouseDragged() {
   }
 }
 
-// on mouse release, send the line to the machine
-void mouseReleased() {
-  
-}
-
 void keyPressed() {
   // arrow right
   if (keyCode == 39) {
     data.saveCurrentLines();
-    currentDataIndex = (currentDataIndex + 1) % data.table.getRowCount();
-    data.loadCurData();
+    goToNextDrawing();
   }
   // arrow left
   if (keyCode == 37) {
@@ -146,10 +140,20 @@ void startSendLines() {
 }
 
 void goToLine () {
+  if (data.lines.get(lineIndex).size() == 0) {
+    return;
+  }
   // move to the first position of first line
   int x = int(data.lines.get(lineIndex).get(segmentIndex).x);
   int y = int(data.lines.get(lineIndex).get(segmentIndex).y);
   machineController.moveTo(x, y); // move to the first point of the first line
+}
+
+void goToNextDrawing () {
+  lineIndex = 0;
+  segmentIndex = 0;
+  currentDataIndex = (currentDataIndex + 1) % data.table.getRowCount();
+  data.loadCurData();
 }
 
 void sendDrawLine() {
@@ -163,7 +167,10 @@ void sendDrawLine() {
     lineIndex++;
     segmentIndex = 0;
     if (lineIndex >= data.lines.size() - 1) {
-      machine_state = MACHINE_IDLE;
+      // machine_state = MACHINE_IDLE;
+      // go to next drawing
+      goToNextDrawing();
+      println("END DRAWING");
       return; 
     }
     goToLine();
