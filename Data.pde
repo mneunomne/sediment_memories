@@ -6,10 +6,16 @@ public class Data {
 
   ArrayList <ArrayList <PVector>> lines = new ArrayList <ArrayList <PVector>> ();
 
+  // ArrayList of loaded audio to be played
+  ArrayList <SoundFile> audios = new ArrayList <SoundFile> ();  
+
   String filename = "data/frases.csv";
+
+  PApplet parent;
   
-  Data () {
+  Data (PApplet _parent) {
     pg = createGraphics(1000, 1000);
+    parent = _parent;
     loadData();
     loadCurData();
   }
@@ -31,6 +37,8 @@ public class Data {
       String id = row.getString("id");
       int idx = row.getInt("index");
       String text = row.getString("text");
+      String audio_file = row.getString("audio");
+      loadAudio(audio_file);
       // println(id + "\t" + idx + "\t" + text);
     }
   }
@@ -42,6 +50,9 @@ public class Data {
     if (linesString.length() > 0) {
       loadLines(linesString);
     }
+    // play cur audio 
+    SoundFile audio = audios.get(currentDataIndex);
+    audio.play();
   }
 
   // Function to update a specific cell
@@ -88,6 +99,13 @@ public class Data {
       lines.add(line);
     }
   }
+
+  void loadAudio (String filepath) {
+    println("loadaudio: " + filepath);
+    SoundFile audio = new SoundFile(parent, "data/audios/" + filepath);
+    audios.add(audio);
+  }
+
 
   void display () {
     displayText();

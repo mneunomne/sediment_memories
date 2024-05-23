@@ -3,6 +3,8 @@ import controlP5.*;
 // Serial library
 import processing.serial.*;
 
+import processing.sound.*;
+
 int currentDataIndex = 0;
 
 Gui gui;
@@ -55,7 +57,7 @@ void setup() {
   size(800, 800);
   background(180);
 
-  data = new Data();
+  data = new Data(this);
 
   machineController = new MachineController(this, noMachine);
 
@@ -157,7 +159,6 @@ void goToNextDrawing () {
 }
 
 void sendDrawLine() {
-  println("sendDrawLine: " + lineIndex + " " + segmentIndex + " " + data.lines.get(lineIndex).size() + " " + data.lines.size());
   if (segmentIndex < data.lines.get(lineIndex).size()-1) {
     segmentIndex++;
     int x = int(data.lines.get(lineIndex).get(segmentIndex).x);
