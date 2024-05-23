@@ -10,9 +10,12 @@ public class MachineController {
 
   boolean noMachine = false;
 
+  int microdelay = default_microdelay;
+
   MachineController(PApplet parent, boolean _noMachine) {
      // if no machine, don't connect to serial
     noMachine = _noMachine;
+    machineCanvas = createGraphics(1000, 1000);
     if (noMachine) return; 
     // Connect to Serial
     print("[MachineController] SerialList: ");
@@ -20,17 +23,21 @@ public class MachineController {
     String portName = Serial.list()[portIndex]; //change the 0 to a 1 or 2 etc. to match your port
     port = new Serial(parent, portName, 115200); 
     // machine canvas   
-    machineCanvas = createGraphics(1000, 1000);
   };
 
   void update() {
-    if (noMachine) return;
-    listenToPort();
+    if (!noMachine) {
+      listenToPort();
+    }
 
     switch (machine_state) {
       case MOVING_TO:
         // if machine is moving to a point, display it
         // display();
+        if (noMachine) {
+          currentPos = nextPos;
+          machine_state = MOVING_TO_ENDED;
+        }
         break;
       case MOVING_TO_ENDED:
         // if machine has finished moving to a point, display it
@@ -39,6 +46,10 @@ public class MachineController {
         break;
       case DRAWING:
         // if machine is drawing a segment, display it
+        if (noMachine) {
+          currentPos = nextPos;
+          machine_state = DRAWING_TO_ENDED;
+        }
         break;
       case DRAWING_TO_ENDED:
         sendDrawLine();
@@ -52,7 +63,6 @@ public class MachineController {
 
   void display () {
     // display current position of machine
-    if (noMachine) return;
     // draw ellipse at current position
     
     machineCanvas.beginDraw();
@@ -112,7 +122,7 @@ public class MachineController {
     int diff_x = int(x - currentPos.x);
     int diff_y = int(y - currentPos.y);
     // send movement data
-    sendMovement(diff_x, diff_y, 1, default_microdelay);
+    sendMovement(diff_x, diff_y, 1, microdelay);
   }
 
   void sendLine(int x, int y) {
@@ -121,7 +131,7 @@ public class MachineController {
     int diff_x = int(x - currentPos.x);
     int diff_y = int(y - currentPos.y);
     // send movement data
-    sendMovement(diff_x, diff_y, 2, default_microdelay);
+    sendMovement(diff_x, diff_y, 2, microdelay);
   }
 
   void sendMovement (int x, int y, int type, int microdelay) {

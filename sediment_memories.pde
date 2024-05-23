@@ -9,6 +9,8 @@ Gui gui;
 
 Data data; 
 
+int waitTime = 1000;
+
 MachineController machineController;
 
 boolean enableDraw = false; 
@@ -47,7 +49,7 @@ int canvas_margin = 100;
 int lineIndex = 0;
 int segmentIndex = 0;
 
-int default_microdelay = 1000;
+int default_microdelay = 200;
 
 void setup() {
   size(800, 800);
@@ -55,11 +57,15 @@ void setup() {
 
   data = new Data();
 
+  machineController = new MachineController(this, noMachine);
+
   ControlP5 cp5 = new ControlP5(this);
   gui = new Gui(cp5);
   gui.init();
 
-  machineController = new MachineController(this, noMachine);
+  state = IDLE;
+  gui.cp5.getController("set_idle").setValue(1);
+  disableGuiState();
 }
 
 void draw() {
@@ -147,6 +153,7 @@ void goToLine () {
 }
 
 void sendDrawLine() {
+  println("sendDrawLine: " + lineIndex + " " + segmentIndex + " " + data.lines.get(lineIndex).size() + " " + data.lines.size());
   if (segmentIndex < data.lines.get(lineIndex).size()-1) {
     segmentIndex++;
     int x = int(data.lines.get(lineIndex).get(segmentIndex).x);
@@ -175,6 +182,8 @@ void sendLines(boolean mode) {
   // change value in the cp5
   gui.cp5.getController("drawMode").setValue(0);
 }
+
+/* STATES GUI SETTERS */
 
 void set_idle (boolean value) {
   if (value) {
@@ -209,4 +218,14 @@ void disableGuiState () {
       gui.cp5.getController(name).setLock(false);
     }
   }
+}
+
+/* MACHINE PARAMETERS */
+
+void microdelaySlider (int value) {
+  machineController.microdelay = value;
+}
+
+void waitSlider (int value) {
+  waitTime = value;
 }
