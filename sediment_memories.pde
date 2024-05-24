@@ -11,7 +11,8 @@ Gui gui;
 
 Data data; 
 
-int waitTime = 2;
+int waitTime = 2000;
+int waitTimeDefault = 2000;
 
 MachineController machineController;
 
@@ -55,8 +56,8 @@ int segmentIndex = 0;
 
 int default_microdelay = 200;
 
-boolean autoNext = false;
-boolean loopOne = true; 
+boolean autoNext = true;
+boolean loopOne = false; 
 
 int lastWaitTime = 0;
 
@@ -85,9 +86,11 @@ void draw() {
 
   if (state == WAIT_DRAW_NEXT) {
     int diffTime = millis() - lastWaitTime;
-    if (diffTime > waitTime * 1000) {
+    println("diff time", diffTime , millis(), waitTime);
+    if (diffTime > waitTime) {
+      state = SEND_LINES;
       goToNextDrawing();
-      state = DRAW_MODE;
+      goToLine();
     }
   }
 }
@@ -191,12 +194,14 @@ void sendDrawLine() {
         // goToNextDrawing();
         state = WAIT_DRAW_NEXT;
         lastWaitTime = millis();
+        return; 
       }
 
       if (loopOne) {
         // goToNextDrawing();
         state = WAIT_DRAW_NEXT;
         lastWaitTime = millis();
+        return; 
       }
       
       println("END CUR DRAWING");

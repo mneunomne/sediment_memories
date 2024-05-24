@@ -67,8 +67,8 @@ public class Gui {
     cp5.addSlider("waitSlider")
       .setPosition(top_right_x - (slider_width/2), top_right_y)
       .setSize(slider_width, 20)
-      .setRange(0, 120)
-      .setValue(waitTime);
+      .setRange(0, 120 * 1000)
+      .setValue(waitTimeDefault);
     top_right_y+=40;
     cp5.getController("waitSlider")
       .getCaptionLabel().align(ControlP5.RIGHT_OUTSIDE, ControlP5.BOTTOM_OUTSIDE)
