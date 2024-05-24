@@ -167,7 +167,8 @@ void sendDrawLine() {
     segmentIndex++;
     int x = int(data.lines.get(lineIndex).get(segmentIndex).x);
     int y = int(data.lines.get(lineIndex).get(segmentIndex).y);
-    machineController.sendLine(x, y, segmentIndex);
+    boolean valid = machineController.sendLine(x, y, segmentIndex);
+    if (!valid) sendDrawLine();
   } else {
     lineIndex++;
     segmentIndex = 0;

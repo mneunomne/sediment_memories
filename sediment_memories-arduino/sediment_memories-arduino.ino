@@ -68,6 +68,7 @@ void listenToPort() {
           // buffer
           char buffer[14];
           int out = sprintf(buffer, "end_%d", index);
+          
           move(posX, posY);
           // repond to the sender the current position
           Serial.println(buffer);
@@ -129,16 +130,45 @@ void move(long diffX, long diffY) {
   int dirY = (diffY > 0) ? 1 : -1;
 
   // Calculate the total steps for each axis
-  int totalStepsX = abs(diffX * steps_per_pixel);
-  int totalStepsY = abs(diffY * steps_per_pixel);
+  long totalStepsX = labs(diffX * steps_per_pixel);
+  long totalStepsY = labs(diffY * steps_per_pixel);
+
+  if (totalStepsX > 0 && totalStepsY == 0) {
+    moveX(totalStepsX, dirX, maxDelay);
+    return;
+  }
+  
+  if (totalStepsX == 0 && totalStepsY > 0) {
+    moveY(totalStepsY, dirY, maxDelay);
+    return;
+  }
+
+  if (totalStepsX == 0 && totalStepsY == 0) {
+    return;
+  }
+
 
   // Determine the larger number of steps
-  int maxSteps = max(totalStepsX, totalStepsY);
+  long maxSteps = max(totalStepsX, totalStepsY);
 
   // Calculate step size for each axis
   float stepSizeX = (float)totalStepsX / maxSteps;
   float stepSizeY = (float)totalStepsY / maxSteps;
 
+
+  Serial.print("debug -");
+  Serial.print("stepSizeX: ");
+  Serial.print(stepSizeX);
+  Serial.print("stepSizeY: ");
+  Serial.print(stepSizeY);
+  Serial.print("maxSteps: ");
+  Serial.print(maxSteps);
+  Serial.print("totalStepsX: ");
+  Serial.print(totalStepsX);
+  Serial.print("totalStepsY: ");
+  Serial.print(totalStepsY);
+  Serial.println(".");
+  
   // Variables to keep track of accumulated error
   float errorX = 0;
   float errorY = 0;

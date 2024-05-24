@@ -131,16 +131,20 @@ public class MachineController {
     sendMovement(diff_x, diff_y, 1, microdelay, 0);
   }
 
-  void sendLine(int x, int y, int point_index) {
+  boolean sendLine(int x, int y, int point_index) {
     machine_state = DRAWING;
     nextPos = new PVector(x, y);
     println("pos: " + x + " " + currentPos.x + " " + y + " " + currentPos.y);
     int diff_x = int(x - currentPos.x);
     int diff_y = int(y - currentPos.y);
+    if (diff_x == 0 && diff_y == 0) {
+      return false;
+    }
     // invert x 
     diff_x = -diff_x;
     // send movement data
     sendMovement(diff_x, diff_y, 2, microdelay, point_index);
+    return true;
   }
 
   void sendMovement (int x, int y, int type, int microdelay, int point_index) {
