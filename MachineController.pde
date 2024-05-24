@@ -21,7 +21,7 @@ public class MachineController {
     print("[MachineController] SerialList: ");
     printArray(Serial.list());
     String portName = Serial.list()[portIndex]; //change the 0 to a 1 or 2 etc. to match your port
-    port = new Serial(parent, portName, 115200); 
+    port = new Serial(parent, portName, 115200);
     // machine canvas 
     loadStoredPosition();
     

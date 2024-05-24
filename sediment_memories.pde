@@ -11,7 +11,7 @@ Gui gui;
 
 Data data; 
 
-int waitTime = 1000;
+int waitTime = 2;
 
 MachineController machineController;
 
@@ -23,10 +23,12 @@ boolean noMachine = false;
 static final int IDLE               = 0;
 static final int DRAW_MODE          = 1;
 static final int SEND_LINES         = 2;
+static final int WAIT_DRAW_NEXT     = 3;
 String [] states = {
   "IDLE",
   "DRAW_MODE",
-  "SEND_LINES"
+  "SEND_LINES",
+  "WAIT_DRAW_NEXT"
 };
 int state = 0; 
 
@@ -56,6 +58,8 @@ int default_microdelay = 200;
 boolean autoNext = false;
 boolean loopOne = true; 
 
+int lastWaitTime = 0;
+
 void setup() {
   size(800, 800);
   background(180);
@@ -78,6 +82,14 @@ void draw() {
   data.display();
   machineController.update();
   machineController.display();
+
+  if (state == WAIT_DRAW_NEXT) {
+    int diffTime = millis() - lastWaitTime;
+    if (diffTime > waitTime * 1000) {
+      goToNextDrawing();
+      state = DRAW_MODE;
+    }
+  }
 }
 
 // on mouse press, create a new line
@@ -176,14 +188,18 @@ void sendDrawLine() {
       // go to next drawing
       if (autoNext) {
         currentDataIndex = (currentDataIndex + 1) % data.table.getRowCount();
-        goToNextDrawing();
-        return;
+        // goToNextDrawing();
+        state = WAIT_DRAW_NEXT;
+        lastWaitTime = millis();
       }
+
       if (loopOne) {
-        goToNextDrawing();
+        // goToNextDrawing();
+        state = WAIT_DRAW_NEXT;
+        lastWaitTime = millis();
       }
       
-      println("END DRAWING");
+      println("END CUR DRAWING");
       return; 
     }
     goToLine();

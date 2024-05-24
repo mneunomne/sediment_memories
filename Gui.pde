@@ -67,7 +67,7 @@ public class Gui {
     cp5.addSlider("waitSlider")
       .setPosition(top_right_x - (slider_width/2), top_right_y)
       .setSize(slider_width, 20)
-      .setRange(10, 1000)
+      .setRange(0, 120)
       .setValue(waitTime);
     top_right_y+=40;
     cp5.getController("waitSlider")
