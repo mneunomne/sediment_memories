@@ -22,7 +22,9 @@ public class MachineController {
     printArray(Serial.list());
     String portName = Serial.list()[portIndex]; //change the 0 to a 1 or 2 etc. to match your port
     port = new Serial(parent, portName, 115200); 
-    // machine canvas   
+    // machine canvas 
+    loadStoredPosition();
+    
   };
 
   void update() {
@@ -92,6 +94,7 @@ public class MachineController {
           int point_index = int(index);
           println("END: " + point_index);
           currentPos = nextPos;
+          storePosition(currentPos.x, currentPos.y);
           if (machine_state == MOVING_TO) {
             machine_state = MOVING_TO_ENDED;
           } else if (machine_state == DRAWING) {
@@ -142,8 +145,11 @@ public class MachineController {
     }
     // invert x 
     diff_x = -diff_x;
+    // draw delay
+    int delay = microdelay + int(random(-100, 100));
+
     // send movement data
-    sendMovement(diff_x, diff_y, 2, microdelay, point_index);
+    sendMovement(diff_x, diff_y, 2, delay, point_index);
     return true;
   }
 
@@ -154,5 +160,18 @@ public class MachineController {
     String message = "G" + type +  " X" + x + " Y" + y + " F" + microdelay +  " I" + point_index + '\n';
     port.write(message);
     println("[MachineController] Sent: " + message);
+  }
+
+  // store last position of machine in txt file
+  void storePosition (float x, float y) {
+    String[] parts = {"0 0"};
+    parts[0] = str(x) + " " + str(y); 
+    saveStrings("data/last_position.txt", parts);
+  }
+
+  void loadStoredPosition () {
+    String[] lines = loadStrings("data/last_position.txt");
+    String[] parts = split(lines[0], ' ');
+    currentPos = new PVector(int(parts[0]), int(parts[1]));
   }
 }

@@ -54,7 +54,6 @@ int segmentIndex = 0;
 int default_microdelay = 200;
 
 boolean autoNext = false;
-
 boolean loopOne = true; 
 
 void setup() {
@@ -178,6 +177,7 @@ void sendDrawLine() {
       if (autoNext) {
         currentDataIndex = (currentDataIndex + 1) % data.table.getRowCount();
         goToNextDrawing();
+        return;
       }
       if (loopOne) {
         goToNextDrawing();
@@ -246,4 +246,11 @@ void microdelaySlider (int value) {
 
 void waitSlider (int value) {
   waitTime = value;
+}
+
+void set_autoNext (boolean value) {
+  autoNext = value;
+}
+void set_loopOne (boolean value) {
+  loopOne = value;
 }

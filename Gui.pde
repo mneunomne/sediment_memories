@@ -27,7 +27,6 @@ public class Gui {
         .setPosition(top_right_x, top_right_y)
         .setSize(40, 20)
         .setValue(false) // states[state] == states[i]
-        .setLock(false) // states[state] == states[i]
         .setMode(ControlP5.CHECKBOX)
         ;
       top_right_y+=40;
@@ -35,6 +34,21 @@ public class Gui {
   }
 
   void buttons () {
+    cp5.addToggle("set_autoNext")
+      .setPosition(top_right_x, top_right_y)
+      .setSize(40, 20)
+      .setValue(autoNext) // states[state] == states[i]
+      .setMode(ControlP5.CHECKBOX)
+      ;
+    top_right_y+=40;
+    
+    cp5.addToggle("set_loopOne")
+      .setPosition(top_right_x, top_right_y)
+      .setSize(40, 20)
+      .setValue(loopOne) // states[state] == states[i]
+      .setMode(ControlP5.CHECKBOX)
+      ;
+    top_right_y+=40;
   }
 
   void sliders () {

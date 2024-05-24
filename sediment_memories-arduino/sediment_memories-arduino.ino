@@ -19,7 +19,7 @@
 GCodeParser GCode = GCodeParser();
 
 int minDelay = 2;
-int maxDelay = 200;
+int maxDelayDefault = 200;
 
 char c;
 
@@ -69,7 +69,7 @@ void listenToPort() {
           char buffer[14];
           int out = sprintf(buffer, "end_%d", index);
           
-          move(posX, posY);
+          move(posX, posY, microdelay);
           // repond to the sender the current position
           Serial.println(buffer);
         }
@@ -85,19 +85,11 @@ void start () {
 
   digitalWrite(ENA_PIN,LOW); // enable motor HIGH -> DISABLE
   digitalWrite(ENA_PIN,LOW); // enable motor HIGH -> DISABLE
-  moveX(1000, 1, 500);
-  moveY(1000, 1, 500);
-  moveX(1000, -1, 500);
-  moveY(1000, -1, 500);
-
-  //long posX = -50000L;
-  //long posY = -50000L;
-  //moveTo(posX, posY);
-  //moveTo(0, 0);
-  //moveTo(-10000, -20000);
-  //moveTo(50000, -10000);
-  //moveTo(0, 0);
-  
+  // initial movement 
+  moveX(500, 1, 500);
+  moveY(500, 1, 500);
+  moveX(500, -1, 500);
+  moveY(500, -1, 500);
 }
 
 // Cubic interpolation function
@@ -116,7 +108,7 @@ float customCubicInterpolate(float t) {
     }
 }
 
-void move(long diffX, long diffY) {
+void move(long diffX, long diffY, int maxDelay) {
   // Serial.println("diff");
   // Serial.println(diffX);
   // Serial.println(diffY);
@@ -124,6 +116,11 @@ void move(long diffX, long diffY) {
   Serial.print(diffX);
   Serial.print(" Y ");
   Serial.println(diffY);
+
+  // if maxDelay is not set, use default
+  if (maxDelay == 0) {
+    maxDelay = maxDelayDefault;
+  }
 
   // Determine the direction for each axis
   int dirX = (diffX > 0) ? 1 : -1;
@@ -155,7 +152,7 @@ void move(long diffX, long diffY) {
   float stepSizeX = (float)totalStepsX / maxSteps;
   float stepSizeY = (float)totalStepsY / maxSteps;
 
-
+  /* debug
   Serial.print("debug -");
   Serial.print("stepSizeX: ");
   Serial.print(stepSizeX);
@@ -168,7 +165,8 @@ void move(long diffX, long diffY) {
   Serial.print("totalStepsY: ");
   Serial.print(totalStepsY);
   Serial.println(".");
-  
+  */
+
   // Variables to keep track of accumulated error
   float errorX = 0;
   float errorY = 0;
