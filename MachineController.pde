@@ -1,6 +1,6 @@
 public class MachineController {
   Serial port;  // Create object from Serial class
-  int portIndex = 0;
+  int portIndex = 1;
 
   PVector currentPos = new PVector(0, 0);
 
@@ -119,6 +119,7 @@ public class MachineController {
   void moveTo(int x, int y) {
     machine_state = MOVING_TO;
     nextPos = new PVector(x, y);
+    println("pos: " + x + " " + currentPos.x + " " + y + " " + currentPos.y);
     int diff_x = int(x - currentPos.x);
     int diff_y = int(y - currentPos.y);
     // send movement data
@@ -128,6 +129,7 @@ public class MachineController {
   void sendLine(int x, int y) {
     machine_state = DRAWING;
     nextPos = new PVector(x, y);
+    println("pos: " + x + " " + currentPos.x + " " + y + " " + currentPos.y);
     int diff_x = int(x - currentPos.x);
     int diff_y = int(y - currentPos.y);
     // send movement data

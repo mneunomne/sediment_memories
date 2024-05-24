@@ -30,7 +30,7 @@ char buffer[14];
 long curX = 0L;
 long curY = 0L;
 
-long steps_per_pixel = 50; 
+long steps_per_pixel = 10; 
 
 void setup() {
   Serial.begin(115200);
@@ -62,6 +62,7 @@ void listenToPort() {
         {
           long posX = GCode.GetWordValue('X');
           long posY = GCode.GetWordValue('Y');
+          int microdelay = GCode.GetWordValue('F');
           move(posX, posY);
           // repond to the sender the current position
           Serial.println("end");
