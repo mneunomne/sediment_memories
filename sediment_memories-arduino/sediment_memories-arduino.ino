@@ -30,7 +30,7 @@ char buffer[14];
 long curX = 0L;
 long curY = 0L;
 
-long steps_per_pixel = 10; 
+long steps_per_pixel = 50; 
 
 void setup() {
   Serial.begin(115200);
@@ -63,9 +63,14 @@ void listenToPort() {
           long posX = GCode.GetWordValue('X');
           long posY = GCode.GetWordValue('Y');
           int microdelay = GCode.GetWordValue('F');
+          int index = GCode.GetWordValue('I');
+          // index to string end_{index}
+          // buffer
+          char buffer[14];
+          int out = sprintf(buffer, "end_%d", index);
           move(posX, posY);
           // repond to the sender the current position
-          Serial.println("end");
+          Serial.println(buffer);
         }
       }
     }
@@ -114,7 +119,9 @@ void move(long diffX, long diffY) {
   // Serial.println("diff");
   // Serial.println(diffX);
   // Serial.println(diffY);
-  Serial.println(diffX);
+  Serial.print("diff: X ");
+  Serial.print(diffX);
+  Serial.print(" Y ");
   Serial.println(diffY);
 
   // Determine the direction for each axis

@@ -53,6 +53,10 @@ int segmentIndex = 0;
 
 int default_microdelay = 200;
 
+boolean autoNext = false;
+
+boolean loopOne = true; 
+
 void setup() {
   size(800, 800);
   background(180);
@@ -103,13 +107,14 @@ void keyPressed() {
   // arrow right
   if (keyCode == 39) {
     data.saveCurrentLines();
+    currentDataIndex = (currentDataIndex + 1) % data.table.getRowCount();
     goToNextDrawing();
   }
   // arrow left
   if (keyCode == 37) {
     data.saveCurrentLines();
     currentDataIndex = (currentDataIndex - 1 + data.table.getRowCount()) % data.table.getRowCount();
-    data.loadCurData();
+    goToNextDrawing();
   } 
 
   // clear
@@ -124,6 +129,7 @@ void keyPressed() {
     if (key == 'r') {
       if (data.lines.size() > 0) {
         data.lines.remove(data.lines.size()-1);
+        data.saveCurrentLines();
       }
     }
   }
@@ -153,7 +159,6 @@ void goToLine () {
 void goToNextDrawing () {
   lineIndex = 0;
   segmentIndex = 0;
-  currentDataIndex = (currentDataIndex + 1) % data.table.getRowCount();
   data.loadCurData();
 }
 
@@ -162,14 +167,21 @@ void sendDrawLine() {
     segmentIndex++;
     int x = int(data.lines.get(lineIndex).get(segmentIndex).x);
     int y = int(data.lines.get(lineIndex).get(segmentIndex).y);
-    machineController.sendLine(x, y);
+    machineController.sendLine(x, y, segmentIndex);
   } else {
     lineIndex++;
     segmentIndex = 0;
     if (lineIndex >= data.lines.size() - 1) {
       // machine_state = MACHINE_IDLE;
       // go to next drawing
-      goToNextDrawing();
+      if (autoNext) {
+        currentDataIndex = (currentDataIndex + 1) % data.table.getRowCount();
+        goToNextDrawing();
+      }
+      if (loopOne) {
+        goToNextDrawing();
+      }
+      
       println("END DRAWING");
       return; 
     }

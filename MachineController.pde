@@ -1,6 +1,6 @@
 public class MachineController {
   Serial port;  // Create object from Serial class
-  int portIndex = 1;
+  int portIndex = 0;
 
   PVector currentPos = new PVector(0, 0);
 
@@ -8,7 +8,7 @@ public class MachineController {
 
   PGraphics machineCanvas;
 
-  boolean noMachine = false;
+  boolean noMachine = true;
 
   int microdelay = default_microdelay;
 
@@ -88,6 +88,9 @@ public class MachineController {
 
         // if message is 'e' means the movement is over
         if (inBuffer.contains("end")) {
+          String index = inBuffer.substring(3, inBuffer.length()-1);
+          int point_index = int(index);
+          println("END: " + point_index);
           currentPos = nextPos;
           if (machine_state == MOVING_TO) {
             machine_state = MOVING_TO_ENDED;
@@ -119,28 +122,32 @@ public class MachineController {
   void moveTo(int x, int y) {
     machine_state = MOVING_TO;
     nextPos = new PVector(x, y);
-    println("pos: " + x + " " + currentPos.x + " " + y + " " + currentPos.y);
+    println("MOVE TO: " + x + " " + currentPos.x + " " + y + " " + currentPos.y);
     int diff_x = int(x - currentPos.x);
     int diff_y = int(y - currentPos.y);
+    // invert x 
+    diff_x = -diff_x;
     // send movement data
-    sendMovement(diff_x, diff_y, 1, microdelay);
+    sendMovement(diff_x, diff_y, 1, microdelay, 0);
   }
 
-  void sendLine(int x, int y) {
+  void sendLine(int x, int y, int point_index) {
     machine_state = DRAWING;
     nextPos = new PVector(x, y);
     println("pos: " + x + " " + currentPos.x + " " + y + " " + currentPos.y);
     int diff_x = int(x - currentPos.x);
     int diff_y = int(y - currentPos.y);
+    // invert x 
+    diff_x = -diff_x;
     // send movement data
-    sendMovement(diff_x, diff_y, 2, microdelay);
+    sendMovement(diff_x, diff_y, 2, microdelay, point_index);
   }
 
-  void sendMovement (int x, int y, int type, int microdelay) {
+  void sendMovement (int x, int y, int type, int microdelay, int point_index) {
     if (noMachine) return;
     // encode movement
     // String message = "[" + x + "," + y + "]";
-    String message = "G" + type +  " X" + x + " Y" + y + " F" + microdelay + '\n';
+    String message = "G" + type +  " X" + x + " Y" + y + " F" + microdelay +  " I" + point_index + '\n';
     port.write(message);
     println("[MachineController] Sent: " + message);
   }

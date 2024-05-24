@@ -77,7 +77,8 @@ public class Data {
       for (PVector point : line) {
         linesString += point.x + "," + point.y + ";";
       }
-      linesString += "\n";
+      // linesString += "\n";
+      println("linesString", linesString);
     }
     updateCell(currentDataIndex, "lines", linesString);
     saveTable(table, filename);
@@ -101,7 +102,6 @@ public class Data {
   }
 
   void loadAudio (String filepath) {
-    println("loadaudio: " + filepath);
     SoundFile audio = new SoundFile(parent, "data/audios/" + filepath);
     audios.add(audio);
   }
