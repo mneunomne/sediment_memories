@@ -71,7 +71,6 @@ void setup() {
 }
 
 void draw() {
-
   background(0);
   data.display();
   machineController.update();
@@ -177,7 +176,6 @@ void sendDrawLine() {
     goToLine();
   }
 }
- 
 
 void drawMode(boolean mode) {
   enableDraw = mode; 
@@ -199,6 +197,7 @@ void set_idle (boolean value) {
     disableGuiState();
   }
 }
+
 void set_draw_mode (boolean value) {
   if (value) {
     state = DRAW_MODE;
@@ -227,8 +226,6 @@ void disableGuiState () {
     }
   }
 }
-
-/* MACHINE PARAMETERS */
 
 void microdelaySlider (int value) {
   machineController.microdelay = value;
