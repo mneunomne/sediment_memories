@@ -18,7 +18,7 @@ MachineController machineController;
 boolean enableDraw = false; 
 boolean enableSendLines = false;
 
-boolean noMachine = true;
+boolean noMachine = false;
 
 static final int IDLE               = 0;
 static final int DRAW_MODE          = 1;
