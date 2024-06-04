@@ -30,7 +30,7 @@ char buffer[14];
 long curX = 0L;
 long curY = 0L;
 
-long steps_per_pixel = 50; 
+long steps_per_pixel = 65; 
 
 void setup() {
   Serial.begin(115200);
@@ -179,6 +179,7 @@ void move(long diffX, long diffY, int maxDelay) {
   int diffDelay = maxDelay - minDelay;
   // Move both axes simultaneously, adjusting step size if needed
   for (int i = 0; i < maxSteps; i++) {
+    /*
     float ratio = (float)i / maxSteps;
     if (i < half) {
       float _ratio =  ratio * 2;
@@ -190,6 +191,7 @@ void move(long diffX, long diffY, int maxDelay) {
       curDelay = minDelay + (diffDelay * cubicRatio); 
     }
     // printf(" %d %.6f \n", curDelay, ratio);
+    */
 
     stepX += stepSizeX;
     stepY += stepSizeY;

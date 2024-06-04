@@ -146,7 +146,7 @@ public class MachineController {
     // invert x 
     diff_x = -diff_x;
     // draw delay
-    int delay = microdelay + int(random(-100, 100));
+    int delay = microdelay; //+ int(random(-100, 100));
 
     // send movement data
     sendMovement(diff_x, diff_y, 2, delay, point_index);

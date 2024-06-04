@@ -192,6 +192,7 @@ void sendDrawLine() {
       if (autoNext) {
         currentDataIndex = (currentDataIndex + 1) % data.table.getRowCount();
         // goToNextDrawing();
+        lineIndex = 0;
         state = WAIT_DRAW_NEXT;
         lastWaitTime = millis();
         return; 
