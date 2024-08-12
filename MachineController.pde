@@ -1,6 +1,6 @@
 public class MachineController {
   Serial port;  // Create object from Serial class
-  int portIndex = 0;
+  int portIndex = 2 ;
 
   PVector currentPos = new PVector(0, 0);
 
@@ -8,7 +8,7 @@ public class MachineController {
 
   PGraphics machineCanvas;
 
-  boolean noMachine = true;
+  boolean noMachine = false;
 
   int microdelay = default_microdelay;
 
@@ -120,6 +120,13 @@ public class MachineController {
     // move to home position
     // currentPos = new PVector(50, 50);
     // sendMovement(currentPos.x, currentPos.y);
+    machineController.move(100, -100); // up
+  }
+
+  void move(int x, int y) {
+    if (noMachine) return;
+    // move to a point
+    sendMovement(x, y, 1, microdelay, 0);
   }
 
   void moveTo(int x, int y) {

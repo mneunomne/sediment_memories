@@ -152,6 +152,48 @@ void keyPressed() {
   if (key == 's') {
     data.saveCurrentLines();
   }
+
+  // move machine WASD
+  if (key == 'w') {
+    machineController.move(0, -1); // up
+    machineController.currentPos.y -= 1;
+  }
+  if (key == 's') {
+    machineController.move(0, 1); // down
+    machineController.currentPos.y += 1;
+  }
+  if (key == 'a') {
+    machineController.move(1, 0); // left
+    machineController.currentPos.x -= 1;
+  }
+  if (key == 'd') {
+    machineController.move(-1, 0); // right
+    machineController.currentPos.x += 1;
+  }
+
+  // with uppercase
+
+  if (machine_state != MOVING_TO) {
+
+    if (key == 'W') {
+      machineController.move(0, -10); // up
+      machineController.currentPos.y -= 10;
+    }
+    if (key == 'S') {
+      machineController.move(0, 10); // down
+      machineController.currentPos.y += 10;
+    }
+    if (key == 'A') {
+      machineController.move(10, 0); // left
+      machineController.currentPos.x -= 10;
+    }
+    if (key == 'D') {
+      machineController.move(-10, 0); // right
+      machineController.currentPos.x += 10;
+    }
+
+  }
+
 }
 
 void startSendLines() {
@@ -275,4 +317,8 @@ void set_autoNext (boolean value) {
 }
 void set_loopOne (boolean value) {
   loopOne = value;
+}
+
+void findHome() {
+  machineController.moveHome();
 }

@@ -48,6 +48,12 @@ public class Gui {
       .setValue(loopOne) // states[state] == states[i]
       .setMode(ControlP5.CHECKBOX)
       ;
+      
+    top_right_y+=40;
+    cp5.addButton("findHome")
+      .setPosition(top_right_x, top_right_y)
+      .setSize(40, 20)
+      ;
     top_right_y+=40;
   }
 
