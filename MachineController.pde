@@ -94,6 +94,12 @@ public class MachineController {
           int point_index = int(index);
           println("END: " + point_index);
           currentPos = nextPos;
+          if (inBuffer.contains("end_limit_x")) {
+            currentPos.x = 0;
+          }
+          if (inBuffer.contains("end_limit_y")) {
+            currentPos.y = 0;
+          }
           storePosition(currentPos.x, currentPos.y);
           if (machine_state == MOVING_TO) {
             machine_state = MOVING_TO_ENDED;
