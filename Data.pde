@@ -121,7 +121,7 @@ public class Data {
     String id = currentRow.getString("id");
     int idx = currentRow.getInt("index");
     String text = currentRow.getString("text");
-    text(id + ", " + idx + ", " + text, 20, y);
+    text(id + ": " + idx, 20, y);
     y += 30;
   }
 

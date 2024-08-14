@@ -65,6 +65,10 @@ void setup() {
   size(800, 800);
   background(180);
 
+  // load monospaced font
+  PFont font = createFont("Courier New", 16);
+  textFont(font);
+
   data = new Data(this);
 
   machineController = new MachineController(this, noMachine);
@@ -319,6 +323,9 @@ void set_loopOne (boolean value) {
   loopOne = value;
 }
 
-void findHome() {
-  machineController.moveHome();
+void findHomeX() {
+  machineController.moveHomeX();
+}
+void findHomeY() {
+  machineController.moveHomeY();
 }

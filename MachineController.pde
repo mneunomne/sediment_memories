@@ -77,6 +77,10 @@ public class MachineController {
     machineCanvas.line(currentPos.x, currentPos.y-10, currentPos.x, currentPos.y+10);
     machineCanvas.endDraw();
 
+    // draw text current position // with line break
+    fill(255);
+    text("Current Position: " + currentPos.x + "\n" + currentPos.y, 10, 50);
+   
     image(machineCanvas, canvas_margin, canvas_margin, width-(canvas_margin*2), height-(canvas_margin*2));
   }
 
@@ -87,7 +91,6 @@ public class MachineController {
       String inBuffer = port.readStringUntil('\n');
       if (inBuffer != null) {
         println("[MachineController] Received: " + inBuffer);
-
         // if message is 'e' means the movement is over
         if (inBuffer.contains("end")) {
           String index = inBuffer.substring(3, inBuffer.length()-1);
@@ -95,9 +98,11 @@ public class MachineController {
           println("END: " + point_index);
           currentPos = nextPos;
           if (inBuffer.contains("end_limit_x")) {
+            println("end_limit_x");
             currentPos.x = 0;
           }
           if (inBuffer.contains("end_limit_y")) {
+            println("end_limit_y");
             currentPos.y = 0;
           }
           storePosition(currentPos.x, currentPos.y);
@@ -121,12 +126,19 @@ public class MachineController {
     }
   }
 
-  void moveHome () {
+  void moveHomeX () {
     if (noMachine) return;
     // move to home position
     // currentPos = new PVector(50, 50);
     // sendMovement(currentPos.x, currentPos.y);
-    machineController.move(100, -100); // up
+    machineController.move(800, 0); // up
+  }
+  void moveHomeY () {
+    if (noMachine) return;
+    // move to home position
+    // currentPos = new PVector(50, 50);
+    // sendMovement(currentPos.x, currentPos.y);
+    machineController.move(0, -800); // up
   }
 
   void move(int x, int y) {

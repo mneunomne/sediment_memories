@@ -50,9 +50,16 @@ public class Gui {
       ;
       
     top_right_y+=40;
-    cp5.addButton("findHome")
+    cp5.addButton("findHomeX")
       .setPosition(top_right_x, top_right_y)
       .setSize(40, 20)
+      .getCaptionLabel().align(ControlP5.RIGHT, ControlP5.BOTTOM_OUTSIDE)
+      ;
+    top_right_y+=40;
+    cp5.addButton("findHomeY")
+      .setPosition(top_right_x, top_right_y)
+      .setSize(40, 20) 
+      .getCaptionLabel().align(ControlP5.RIGHT, ControlP5.BOTTOM_OUTSIDE)
       ;
     top_right_y+=40;
   }
