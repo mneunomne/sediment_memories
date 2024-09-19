@@ -19,7 +19,7 @@ MachineController machineController;
 boolean enableDraw = false; 
 boolean enableSendLines = false;
 
-boolean noMachine = false;
+boolean noMachine = true;
 
 static final int IDLE               = 0;
 static final int DRAW_MODE          = 1;
@@ -195,9 +195,7 @@ void keyPressed() {
       machineController.move(-10, 0); // right
       machineController.currentPos.x += 10;
     }
-
   }
-
 }
 
 void startSendLines() {

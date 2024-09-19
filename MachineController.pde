@@ -31,7 +31,6 @@ public class MachineController {
     if (!noMachine) {
       listenToPort();
     }
-
     switch (machine_state) {
       case MOVING_TO:
         // if machine is moving to a point, display it
@@ -44,7 +43,7 @@ public class MachineController {
       case MOVING_TO_ENDED:
         // if machine has finished moving to a point, display it
         sendDrawLine();
-        //display();
+        // display();
         break;
       case DRAWING:
         // if machine is drawing a segment, display it
@@ -112,16 +111,6 @@ public class MachineController {
             machine_state = DRAWING_TO_ENDED;
           }
         }
-
-        /*
-        // parse incoming message
-        String[] parts = split(inBuffer, 'X');
-        if (parts.length == 2) {
-          int x = int(parts[1]);
-          int y = int(parts[2]);
-          currentPos = new PVector(x, y);
-        }
-        */
       }
     }
   }
